@@ -1,0 +1,20 @@
+{
+  "films": [
+    {
+      "id": 1,
+      "name": "Avergers",
+      "photo": "image.jpg",
+      "date_publication": "12.08.2022",
+      "rating": 4.8,
+      "description": "The best film"
+    },
+    {
+      "id": 2,
+      "name": "Avergers2",
+      "photo": "image2.jpg",
+      "date_publication": "12.12.2022",
+      "rating": 5.0,
+      "description": "The best film"
+    }
+  ]
+}
