@@ -7,43 +7,73 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.rakitov.androidstarterapp.FilmViewModel
+import com.rakitov.androidstarterapp.R
 import com.rakitov.androidstarterapp.model.Film
 import com.rakitov.androidstarterapp.navigation.NavRoute
+import com.rakitov.androidstarterapp.views.ChipsView
+import com.rakitov.androidstarterapp.views.RatingView
+import com.rakitov.androidstarterapp.views.SearchView
+import java.util.*
 
 @SuppressLint("ResourceType", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun StartScreen(navController: NavHostController, viewModel: FilmViewModel) {
+    val categoriesArray = stringArrayResource(id = R.array.categories)
 
     val films = viewModel.films
+    val state = remember {
+        mutableStateOf(TextFieldValue(""))
+    }
+    val categories = remember {
+        mutableStateListOf(categoriesArray)
+    }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        backgroundColor = Color.White
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-
-            // content padding
-            contentPadding = PaddingValues(
-                start = 12.dp,
-                top = 16.dp,
-                end = 12.dp,
-                bottom = 16.dp
+        Column(
+            modifier = Modifier.padding(
+                start = 20.dp
             )
         ) {
+            SearchView(state = state)
+            Text(
+                text = "Популярное сейчас:",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp, end = 21.dp),
+                color = Color.Black
+            )
+            ChipsView(categories)
+            FilmsRenderer(films = films, navController = navController)
+        }
+    }
+}
 
-            items(films) { item ->
-                FilmCard(film = item, navController)
-            }
+@Composable
+fun FilmsRenderer(films: List<Film>, navController: NavHostController) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2)
+    ) {
+        items(films) { item ->
+            FilmCard(film = item, navController)
         }
     }
 }
@@ -53,33 +83,54 @@ fun StartScreen(navController: NavHostController, viewModel: FilmViewModel) {
 fun FilmCard(film: Film, navController: NavHostController) {
     Card(
         modifier = Modifier
+            .padding(top = 16.dp, bottom = 9.dp, end = 21.dp)
             .fillMaxSize()
-            .padding(all = 4.dp)
-            .clickable { navController.navigate(route = NavRoute.Film.route + "/${film.id}") }
+            .clickable { navController.navigate(route = NavRoute.Film.route + "/${film.id}") },
+        backgroundColor = Color.White,
+        elevation = 0.dp
     ) {
-        Row {
+        Column {
             Image(
-                painter = painterResource(id = film.photo),
+                painter = painterResource(id = R.drawable.wrath),
                 contentDescription = "",
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .height(50.dp)
-                    .width(100.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(18.dp))
+                    .height(216.dp)
             )
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = film.name,
-                    modifier = Modifier
-                        .padding(all = 4.dp)
+            Text(
+                text = film.name,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            Text(
+                text = film.description,
+                modifier = Modifier
+                    .padding(top = 10.dp, bottom = 10.dp)
+                    .height(90.dp),
+                fontSize = 12.sp,
+                color = Color.Black,
+                maxLines = 6,
+                overflow = TextOverflow.Ellipsis
+            )
+            Row {
+                RatingView(
+                    rating = film.rating, modifier = Modifier
+                        .width(100.dp)
+                        .align(Alignment.Bottom)
                 )
-                Text(
-                    text = film.date_publication,
+                Image(
+                    painter = painterResource(id = R.drawable.icons18),
+                    contentDescription = "",
                     modifier = Modifier
-                        .padding(all = 4.dp)
-                )
+                        .padding(start = 15.dp)
+                        .height(30.dp)
+                        .width(30.dp),
+
+                    )
             }
         }
     }

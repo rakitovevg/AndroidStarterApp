@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories">
+        <item>боевики</item>
+        <item>драмы</item>
+        <item>комедии</item>
+        <item>артхаус</item>
+        <item>мелодрамы</item>
+        <item>фантастика</item>
+    </string-array>
+</resources>

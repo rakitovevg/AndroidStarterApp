@@ -43,14 +43,14 @@ private fun mapJsonToFilm(json: String): List<Film> {
     runCatching {
         val filmJson = JSONObject(json).getJSONArray("films")
 
-        for (i in 0..filmJson.length()) {
+        for (i in 0 until filmJson.length()) {
             val filmJson = filmJson.getJSONObject(i)
             val film = Film(
                 id = filmJson.getInt("id"),
                 name = filmJson.getString("name"),
                 photo = R.drawable.avangers_main_800x400_jpeg,
                 date_publication = filmJson.getString("date_publication"),
-                rating = filmJson.getDouble("rating"),
+                rating = filmJson.getString("rating").toFloat(),
                 description = filmJson.getString("description")
             )
             films.add(film)

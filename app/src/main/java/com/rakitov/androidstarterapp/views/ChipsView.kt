@@ -1,0 +1,41 @@
+package com.rakitov.androidstarterapp.views
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Chip
+import androidx.compose.material.ChipDefaults
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ChipsView(categories: SnapshotStateList<Array<String>>) {
+    LazyRow {
+        itemsIndexed(items = categories.first()) { _, item ->
+            Chip(
+                onClick = { /* Do something! */ },
+                border = BorderStroke(
+                    ChipDefaults.OutlinedBorderSize,
+                    Color.Black
+                ),
+                colors = ChipDefaults.chipColors(
+                    backgroundColor = Color.White,
+                    contentColor = Color.Black
+                ),
+                modifier = Modifier.padding(end = 4.dp)
+            ) {
+                Text(
+                    text = item,
+                    modifier = Modifier.padding(2.dp)
+                )
+            }
+        }
+    }
+}

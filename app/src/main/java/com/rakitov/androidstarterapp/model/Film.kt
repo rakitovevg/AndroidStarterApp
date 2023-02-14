@@ -8,6 +8,6 @@ data class Film(
     @StringRes
     val photo: Int,
     val date_publication: String,
-    val rating: Double,
+    val rating: Float,
     val description: String
 )
