@@ -17,7 +17,8 @@ import com.rakitov.androidstarterapp.navigation.NavRoute
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "ResourceType")
 @Composable
 fun FilmScreen(navController: NavHostController, viewModel: FilmViewModel, filmId: String) {
-    val film = viewModel.getFilms()[filmId.toInt()]
+    val film = viewModel.films.find { it.id == filmId.toInt() }
+        ?: throw IllegalStateException("No find film")
 
     Scaffold(
         modifier = Modifier.fillMaxSize()

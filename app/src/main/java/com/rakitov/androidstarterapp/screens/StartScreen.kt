@@ -4,8 +4,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -23,17 +24,23 @@ import com.rakitov.androidstarterapp.navigation.NavRoute
 @Composable
 fun StartScreen(navController: NavHostController, viewModel: FilmViewModel) {
 
-    val films = viewModel.getFilms()
+    val films = viewModel.films
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+
+            // content padding
+            contentPadding = PaddingValues(
+                start = 12.dp,
+                top = 16.dp,
+                end = 12.dp,
+                bottom = 16.dp
+            )
         ) {
+
             items(films) { item ->
                 FilmCard(film = item, navController)
             }

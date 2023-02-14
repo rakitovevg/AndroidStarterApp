@@ -1,20 +1,13 @@
 package com.rakitov.androidstarterapp
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModel
-import com.rakitov.androidstarterapp.model.Film
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.rakitov.androidstarterapp.utils.loadJson
 
-class FilmViewModel() : ViewModel() {
+@SuppressLint("StaticFieldLeak")
+class FilmViewModel(application: Application) : AndroidViewModel(application) {
+    private val context = getApplication<Application>().applicationContext
 
-    @SuppressLint("ResourceType")
-    fun getFilms() = listOf(
-        Film(
-            0,
-            "Avangers",
-            R.drawable.avangers_main_800x400_jpeg,
-            "01.12.2022",
-            5.0,
-            "the best film"
-        )
-    )
+    val films = loadJson(context)
 }
