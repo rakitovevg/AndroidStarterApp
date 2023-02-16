@@ -3,14 +3,14 @@ package com.rakitov.androidstarterapp.model
 import androidx.annotation.DrawableRes
 
 data class Film(
-    val id: Int,
-    val name: String,
+    var id: Int = 0,
+    var name: String = "",
     @DrawableRes
-    val photo: Int,
-    val date_publication: String,
-    val rating: Float,
-    val description: String,
-    val actors: List<Actor>
+    var photo: Int = 0,
+    var date_publication: String = "",
+    var rating: Float = 0.0f,
+    var description: String = "",
+    var actors: List<Actor> = emptyList()
 )
 
 data class Actor(

@@ -1,4 +1,4 @@
-package com.rakitov.androidstarterapp.views
+package com.rakitov.androidstarterapp.ui.views
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
@@ -9,15 +9,14 @@ import androidx.compose.material.ChipDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ChipsView(categories: SnapshotStateList<Array<String>>) {
+fun ChipsView(categories: List<String>) {
     LazyRow {
-        itemsIndexed(items = categories.first()) { _, item ->
+        itemsIndexed(items = categories) { _, item ->
             CreateChip(item = item)
         }
     }

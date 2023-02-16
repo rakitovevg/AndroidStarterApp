@@ -1,4 +1,4 @@
-package com.rakitov.androidstarterapp.views
+package com.rakitov.androidstarterapp.ui.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
