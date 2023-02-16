@@ -41,52 +41,63 @@ private fun loadJsonFromAssets(context: Context): String {
 
 @SuppressLint("ResourceType")
 private fun mapJsonToFilm(json: String): List<Film> {
-    val films = mutableListOf<Film>()
-    runCatching {
-        val filmJson = JSONObject(json).getJSONArray("films")
-
-        for (i in 0 until filmJson.length()) {
-            val filmJson = filmJson.getJSONObject(i)
-            val film = Film(
-                id = filmJson.getInt("id"),
-                name = filmJson.getString("name"),
-                photo = getResId(filmJson.getString("photo"), R.drawable::class.java)!!,
-                date_publication = filmJson.getString("date_publication"),
-                rating = filmJson.getString("rating").toFloat(),
-                description = filmJson.getString("description"),
-                actors = getActors(filmJson.getJSONArray("actors"))
-            )
-            films.add(film)
-        }
-    }.onFailure {
-        it.printStackTrace()
-    }
-
-    return films
+    //TODO("Обработку ошибок добавлю в блоке по обработке Retrofit")
+    return runCatching {
+        JSONObject(json).getJSONArray("films")
+            .toList()
+            .map {
+                Film(
+                    id = it.getInt("id"),
+                    name = it.getString("name"),
+                    photo = getResId(it.getString("photo"), R.drawable::class.java)!!,
+                    date_publication = it.getString("date_publication"),
+                    rating = it.getString("rating").toFloat(),
+                    description = it.getString("description"),
+                    actors = getActors(it.getJSONArray("actors"))
+                )
+            }
+    }.mapSuccess(::getFieldOrThrowable)
 }
 
 private fun getActors(array: JSONArray): List<Actor> {
-    val actors = mutableListOf<Actor>()
-
-    for (i in 0 until array.length()) {
-        val actorsArray = array.getJSONObject(i)
-        val actor = Actor(
-            name = actorsArray.getString("name"),
-            photo = getResId(actorsArray.getString("photo"), R.drawable::class.java)!!
-        )
-        actors.add(actor)
-    }
-
-    return actors
+    //TODO("Обработку ошибок добавлю в блоке по обработке Retrofit")
+    return runCatching {
+        array
+            .toList()
+            .map {
+                Actor(
+                    name = it.getString("name"),
+                    photo = getResId(it.getString("photo"), R.drawable::class.java)!!
+                )
+            }
+    }.mapSuccess(::getFieldOrThrowable)
 }
 
 inline fun <reified T> getResId(resName: String, clazz: Class<T>): Int? {
 
-    var result: Int = 0
+    var result = 0
 
     runCatching {
         val field = clazz.getDeclaredField(resName)
         result = field.getInt(field)
     }.onFailure { return null }
     return result
+}
+
+private fun JSONArray.toList(): List<JSONObject> {
+    val jSONObjects = mutableListOf<JSONObject>()
+    for (i in 0 until length()) {
+        jSONObjects.add(getJSONObject(i))
+    }
+    return jSONObjects
+}
+
+private inline fun <S, R : Any> Result<S>.mapSuccess(block: (Result<S>) -> R): R =
+    when {
+        isSuccess -> block(this)
+        else -> throw IllegalStateException()
+    }
+
+private fun <T> getFieldOrThrowable(result: Result<T>): T {
+    return result.getOrNull() ?: throw IllegalArgumentException()
 }

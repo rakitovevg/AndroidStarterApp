@@ -1,4 +1,4 @@
-package com.rakitov.androidstarterapp.screens
+package com.rakitov.androidstarterapp.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -15,9 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,23 +25,20 @@ import com.rakitov.androidstarterapp.R
 import com.rakitov.androidstarterapp.model.Film
 import com.rakitov.androidstarterapp.navigation.NavRoute
 import com.rakitov.androidstarterapp.ui.theme.Shapes
-import com.rakitov.androidstarterapp.views.ChipsView
-import com.rakitov.androidstarterapp.views.RatingView
-import com.rakitov.androidstarterapp.views.SearchView
+import com.rakitov.androidstarterapp.ui.views.ChipsView
+import com.rakitov.androidstarterapp.ui.views.RatingView
+import com.rakitov.androidstarterapp.ui.views.SearchView
 import java.util.*
 
-@SuppressLint("ResourceType", "UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint(
+    "ResourceType", "UnusedMaterialScaffoldPaddingParameter",
+    "StateFlowValueCalledInComposition"
+)
 @Composable
 fun StartScreen(navController: NavHostController, viewModel: FilmViewModel) {
-    val categoriesArray = stringArrayResource(id = R.array.categories)
+    val categories = viewModel.uiState.value.categories
 
-    val films = viewModel.films
-    val state = remember {
-        mutableStateOf(TextFieldValue(""))
-    }
-    val categories = remember {
-        mutableStateListOf(categoriesArray)
-    }
+    val films = viewModel.uiState.value.films
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -54,7 +49,10 @@ fun StartScreen(navController: NavHostController, viewModel: FilmViewModel) {
                 start = 20.dp
             )
         ) {
-            SearchView(state = state)
+            SearchView(
+                search = viewModel.searchField,
+                onChangedValue = { viewModel.updateSearchField(it) }
+            )
             Text(
                 text = "Популярное сейчас:",
                 fontWeight = FontWeight.Bold,
@@ -91,7 +89,7 @@ fun FilmCard(film: Film, navController: NavHostController) {
     ) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.wrath),
+                painter = painterResource(id = film.photo),
                 contentDescription = "",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier

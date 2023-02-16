@@ -1,4 +1,4 @@
-package com.rakitov.androidstarterapp.views
+package com.rakitov.androidstarterapp.ui.views
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.Box
@@ -21,7 +21,11 @@ import com.rakitov.androidstarterapp.R
 fun RatingView(
     modifier: Modifier = Modifier,
     rating: Float,
-    spaceBetween: Dp = 0.dp
+    spaceBetween: Dp = 0.dp,
+    /**
+     * Параметр, управляющий общим уровнем рейтинга
+     **/
+    totalCount: Int = 5
 ) {
     val bitmap1 =
         BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.pngwing_out)
@@ -29,8 +33,6 @@ fun RatingView(
 
     val bitmap2 = BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.pngwing)
     val imageFull = bitmap2.asImageBitmap()
-
-    val totalCount = 5
 
     val height = LocalDensity.current.run { image.height.toDp() }
     val width = LocalDensity.current.run { image.width.toDp() }
