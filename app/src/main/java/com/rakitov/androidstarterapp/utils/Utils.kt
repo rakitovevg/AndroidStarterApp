@@ -3,7 +3,9 @@ package com.rakitov.androidstarterapp.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import com.rakitov.androidstarterapp.R
+import com.rakitov.androidstarterapp.model.Actor
 import com.rakitov.androidstarterapp.model.Film
+import org.json.JSONArray
 import org.json.JSONObject
 
 object Constants {
@@ -48,10 +50,11 @@ private fun mapJsonToFilm(json: String): List<Film> {
             val film = Film(
                 id = filmJson.getInt("id"),
                 name = filmJson.getString("name"),
-                photo = R.drawable.avangers_main_800x400_jpeg,
+                photo = getResId(filmJson.getString("photo"), R.drawable::class.java)!!,
                 date_publication = filmJson.getString("date_publication"),
                 rating = filmJson.getString("rating").toFloat(),
-                description = filmJson.getString("description")
+                description = filmJson.getString("description"),
+                actors = getActors(filmJson.getJSONArray("actors"))
             )
             films.add(film)
         }
@@ -60,4 +63,30 @@ private fun mapJsonToFilm(json: String): List<Film> {
     }
 
     return films
+}
+
+private fun getActors(array: JSONArray): List<Actor> {
+    val actors = mutableListOf<Actor>()
+
+    for (i in 0 until array.length()) {
+        val actorsArray = array.getJSONObject(i)
+        val actor = Actor(
+            name = actorsArray.getString("name"),
+            photo = getResId(actorsArray.getString("photo"), R.drawable::class.java)!!
+        )
+        actors.add(actor)
+    }
+
+    return actors
+}
+
+inline fun <reified T> getResId(resName: String, clazz: Class<T>): Int? {
+
+    var result: Int = 0
+
+    runCatching {
+        val field = clazz.getDeclaredField(resName)
+        result = field.getInt(field)
+    }.onFailure { return null }
+    return result
 }

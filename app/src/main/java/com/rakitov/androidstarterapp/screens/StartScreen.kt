@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +26,7 @@ import com.rakitov.androidstarterapp.FilmViewModel
 import com.rakitov.androidstarterapp.R
 import com.rakitov.androidstarterapp.model.Film
 import com.rakitov.androidstarterapp.navigation.NavRoute
+import com.rakitov.androidstarterapp.ui.theme.Shapes
 import com.rakitov.androidstarterapp.views.ChipsView
 import com.rakitov.androidstarterapp.views.RatingView
 import com.rakitov.androidstarterapp.views.SearchView
@@ -93,10 +93,10 @@ fun FilmCard(film: Film, navController: NavHostController) {
             Image(
                 painter = painterResource(id = R.drawable.wrath),
                 contentDescription = "",
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(18.dp))
+                    .clip(Shapes.small)
                     .height(216.dp)
             )
             Text(

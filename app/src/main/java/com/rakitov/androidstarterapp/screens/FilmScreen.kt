@@ -1,18 +1,22 @@
 package com.rakitov.androidstarterapp.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.rakitov.androidstarterapp.FilmViewModel
-import com.rakitov.androidstarterapp.navigation.NavRoute
+import com.rakitov.androidstarterapp.ui.theme.Shapes
+import com.rakitov.androidstarterapp.ui.theme.White
+import com.rakitov.androidstarterapp.views.FilmView
+
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "ResourceType")
 @Composable
@@ -20,43 +24,29 @@ fun FilmScreen(navController: NavHostController, viewModel: FilmViewModel, filmI
     val film = viewModel.films.find { it.id == filmId.toInt() }
         ?: throw IllegalStateException("No find film")
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        Card(
+        Image(
+            painter = painterResource(id = film.photo),
+            contentDescription = "",
+            alignment = Alignment.TopStart,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(all = 4.dp)
-                .clickable { navController.navigate(route = NavRoute.Film.route + "/${film.id}") }
+                .height(290.dp)
+                .fillMaxWidth()
+                .clip(Shapes.small)
+        )
+        Box(
+            contentAlignment = Alignment.BottomStart,
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(top = 224.dp)
+                .clip(Shapes.small)
+                .background(White)
         ) {
-            Row {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = film.name,
-                        modifier = Modifier
-                            .padding(all = 4.dp)
-                    )
-                    Text(
-                        text = film.date_publication,
-                        modifier = Modifier
-                            .padding(all = 4.dp)
-                    )
-                    Text(
-                        text = film.description,
-                        modifier = Modifier
-                            .padding(all = 4.dp)
-                    )
-                    Text(
-                        text = film.rating.toString(),
-                        modifier = Modifier
-                            .padding(all = 4.dp)
-                    )
-                }
-            }
+            FilmView(film = film)
         }
     }
 }
